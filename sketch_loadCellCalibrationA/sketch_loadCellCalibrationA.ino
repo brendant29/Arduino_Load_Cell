@@ -40,13 +40,17 @@ HX711 scale(DOUT, CLK);
 
 float calibration_factor = -1000000; //-2050 worked for my 440lb max scale setup
 
+// How often do we do readings?
+ long time = 0; //
+ int timeBetweenReadings = 2000; // How often we want a reading (ms)
+
 void setup() {
   Serial.begin(9600);
   Serial.println("HX711 calibration sketch");
   Serial.println("Remove all weight from scale");
   Serial.println("After readings begin, place known weight on scale");
-  Serial.println("Press + or a to increase calibration factor");
-  Serial.println("Press - or z to decrease calibration factor");
+  Serial.println("Press + (coarse) or a (fine) to increase calibration factor");
+  Serial.println("Press - (coarse) or z (fine) to decrease calibration factor");
 
   scale.set_scale();
   scale.tare();  //Reset the scale to 0
@@ -57,16 +61,21 @@ void setup() {
 }
 
 void loop() {
+  
+   // Is it time to print?
+   if(millis() > time + timeBetweenReadings){
+    
+    scale.set_scale(calibration_factor); //Adjust to this calibration factor
 
-  scale.set_scale(calibration_factor); //Adjust to this calibration factor
-
-  Serial.print("Reading: ");
-  Serial.print(scale.get_units(), 1);
-  Serial.print(" lbs"); //Change this to kg and re-adjust the calibration factor if you follow SI units like a sane person
-  Serial.print(" calibration_factor: ");
-  Serial.print(calibration_factor);
-  Serial.println();
-
+    Serial.print("Reading: ");
+    Serial.print(scale.get_units(), 1);
+    Serial.print(" lbs"); //Change this to kg and re-adjust the calibration factor if you follow SI units like a sane person
+    Serial.print(" calibration_factor: ");
+    Serial.print(calibration_factor);
+    Serial.println();
+    time = millis();
+   }
+   
   if(Serial.available())
   {
     char temp = Serial.read();
