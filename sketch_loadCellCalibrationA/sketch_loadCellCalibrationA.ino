@@ -38,7 +38,7 @@
 
 HX711 scale(DOUT, CLK);
 
-float calibration_factor = -1000000; //-2050 worked for my 440lb max scale setup
+float calibration_factor = -10000; //-2050 worked for my 440lb max scale setup
 
 // How often do we do readings?
  long time = 0; //
