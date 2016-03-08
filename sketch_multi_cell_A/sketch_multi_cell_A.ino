@@ -19,12 +19,13 @@ float calibrations[scaleCount] = {-10000, -10000, -10000, -10000};
 HX711 *allCells[scaleCount] = {NULL, NULL, NULL, NULL}; 
 
 void setup() {
+  Serial.begin(9600);
+  Serial.print("yes, it loaded");
   for(int ii=0; ii<scaleCount; ii++){
     allCells[ii] = new HX711(pinsDOUT[ii], pinsSCK[ii]);
     allCells[ii]->set_scale(calibrations[ii]);
     allCells[ii]->tare();
   }
-  Serial.begin(9600);
 }
 
 void loop() {
