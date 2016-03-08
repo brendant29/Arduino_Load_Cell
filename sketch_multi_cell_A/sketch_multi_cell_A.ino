@@ -3,7 +3,7 @@
 #define scaleCount 4
 //how many load cells are hooked up
 
-int pinsDOUT[scaleCount] = {1,3,5,7}; 
+int pinsDOUT[scaleCount] = {3,5,7,9}; 
 //The pins hooked up to the respective cells' DOUT
 
 int pinsSCK[scaleCount] = {2,4,6,8};
@@ -21,6 +21,8 @@ HX711 *allCells[scaleCount] = {NULL, NULL, NULL, NULL};
 void setup() {
   Serial.begin(9600);
   Serial.print("yes, it loaded");
+
+  //setting up the cells
   for(int ii=0; ii<scaleCount; ii++){
     allCells[ii] = new HX711(pinsDOUT[ii], pinsSCK[ii]);
     allCells[ii]->set_scale(calibrations[ii]);
