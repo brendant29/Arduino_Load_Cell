@@ -9,19 +9,17 @@ HX711 scale(DOUT, CLK);
  long time = 0; //
  int timeBetweenReadings = 2000; // How often we want a reading (ms)
 
-void calibrate(HX711 scale){
-  char message[500];
+void calibrate(HX711 *cell){
   
   if(!Serial){
     return;
-  }
-  //return if port not open
+  } //return if port not open
   
-  Serial.println("Ready the scale for taring, then enter any character");
+  Serial.println("Ready the cell for taring, then enter any character");
 
   //wait for input, then tare
    while (Serial.available() == 0)
-   scale.tare();
+   cell->tare();
 
   //clear the serial buffer
    delay(200);
@@ -29,26 +27,25 @@ void calibrate(HX711 scale){
      Serial.read();
    }
 
-  Serial.println("Place a known weight on the scale, then enter its weight");
+  Serial.println("Place a known weight on the cell, then enter its weight");
 
   //wait for input
   while (Serial.available() == 0)
 
-  //read scale, compare to input weight, calibrate
-  scale.set_scale();
-  float scale_weight = scale.get_units();
+  //read cell, compare to input weight, calibrate
+  cell->set_scale();
+  float cell_weight = cell->get_units();
   delay(200);
   float real_weight = Serial.parseFloat();
-  float calibrator = real_weight / scale_weight;
-  scale.set_scale(calibrator);
-  
-  
+  float calibrator = cell_weight / real_weight;
+  cell->set_scale(calibrator);
 }
 
 void setup() {
   Serial.begin(9600);
 
-  calibrate(scale);
+  calibrate(&scale);
+  Serial.println(scale.get_scale());
 }
 
 void loop() {
