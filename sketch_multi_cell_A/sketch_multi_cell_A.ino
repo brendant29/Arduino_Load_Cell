@@ -3,10 +3,10 @@
 #define scaleCount 4
 //how many load cells are hooked up
 
-int pinsDOUT[scaleCount] = {3,4,5,6}; 
+int pinsDOUT[scaleCount] = {3,5,7,9}; 
 //The pins hooked up to the respective cells' DOUT
 
-int pinsSCK[scaleCount] = {2,2,2,2};
+int pinsSCK[scaleCount] = {2,4,6,8};
 //The pins hooked up to the respective cells' SCK
 
 float calibrations[scaleCount] = {-10000, -10000, -10000, -10000};
@@ -25,6 +25,7 @@ void setup() {
   //setting up the cells
   for(int ii=0; ii<scaleCount; ii++){
     allCells[ii] = new HX711(pinsDOUT[ii], pinsSCK[ii]);
+    allCells[ii]->set_gain(64);
     allCells[ii]->set_scale(calibrations[ii]);
     allCells[ii]->tare();
   }
@@ -39,7 +40,7 @@ void loop() {
       Serial.print("Cell ");
       Serial.print(ii);
       Serial.println(": ");
-      Serial.print(allCells[ii]->get_units()); //the actual reading
+      Serial.print(allCells[ii]->read()); //the actual reading
       Serial.println(" units");
     }
     time = millis();
